@@ -31,6 +31,7 @@
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.4.0",
     "eslint-config-google": "^0.9.1",
+    "jest": "^23.6.0",
     "jest-coverage-ratchet": "^0.2.3",
     "regenerator-runtime": "^0.12.1",
     "xhr-mock": "^2.4.1"
