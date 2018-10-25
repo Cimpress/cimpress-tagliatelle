@@ -26,6 +26,7 @@ const options = {
    retries: 3, // By default there are 3 retries
    retryDelayInMs: 1000 // Default: 1000
 }
+
 const taggingService = new TaggingService(options);
 
 ```
