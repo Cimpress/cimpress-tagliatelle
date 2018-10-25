@@ -63,7 +63,7 @@ describe("TaggingService", () => {
 
     test("No namespace specified returns correct values", (done) => {
       const ts = new TaggingService();
-      mock.get(`${ts.baseUrl}/v0/resources/${resourceId}/tags`, {
+      mock.get(`${ts.baseUrl}/v0/resources/${encodeURIComponent(resourceId)}/tags`, {
         status: 200,
         body: res
       });
@@ -78,7 +78,7 @@ describe("TaggingService", () => {
 
     test("Namespace specified returns correct values", (done) => {
       const ts = new TaggingService();
-      mock.get(`${ts.baseUrl}/v0/resources/${resourceId}/tags?namespace=my-namespace`, {
+      mock.get(`${ts.baseUrl}/v0/resources/${encodeURIComponent(resourceId)}/tags?namespace=my-namespace`, {
         status: 200,
         body: res
       });
@@ -106,7 +106,7 @@ describe("TaggingService", () => {
 
     test("Throws TagNotFound when tag doesn't exist", (done) => {
       const ts = new TaggingService();
-      mock.get(`${ts.baseUrl}/v0/resources/${resourceId}/tags/${tagId}`, {
+      mock.get(`${ts.baseUrl}/v0/resources/${encodeURIComponent(resourceId)}/tags/${tagId}`, {
         status: 404,
         body: "NOT FOUND"
       });
@@ -120,7 +120,7 @@ describe("TaggingService", () => {
 
     test("Get existing tag", (done) => {
       const ts = new TaggingService();
-      mock.get(`${ts.baseUrl}/v0/resources/${resourceId}/tags/${tagId}`, {
+      mock.get(`${ts.baseUrl}/v0/resources/${encodeURIComponent(resourceId)}/tags/${tagId}`, {
         status: 200,
         body: res
       });
@@ -147,7 +147,7 @@ describe("TaggingService", () => {
 
     test("Creates/updates a tag", (done) => {
       const ts = new TaggingService();
-      mock.put(`${ts.baseUrl}/v0/resources/${resourceId}/tags/${tagId}`, {
+      mock.put(`${ts.baseUrl}/v0/resources/${encodeURIComponent(resourceId)}/tags/${tagId}`, {
         status: 200,
         body: res
       });

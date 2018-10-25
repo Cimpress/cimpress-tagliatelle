@@ -50,7 +50,7 @@ class TaggingService {
 
     async getResourceTags(accessToken, resourceId, namespace = null) {
         const axiosInstance = this.__getAxiosInstance(accessToken);
-        const response = await axiosInstance.get(`${this.baseUrl}/v0/resources/${resourceId}/tags`, {
+        const response = await axiosInstance.get(`${this.baseUrl}/v0/resources/${encodeURIComponent(resourceId)}/tags`, {
             params: namespace ? {namespace} : {},
         });
         return response.data;
@@ -59,7 +59,7 @@ class TaggingService {
     async getTag(accessToken, resourceId, tagId) {
         const axiosInstance = this.__getAxiosInstance(accessToken);
         try {
-            const response = await axiosInstance.get(`${this.baseUrl}/v0/resources/${resourceId}/tags/${tagId}`);
+            const response = await axiosInstance.get(`${this.baseUrl}/v0/resources/${encodeURIComponent(resourceId)}/tags/${tagId}`);
             return response.data;
         } catch (err) {
             if (err.response && err.response.status === 404) {
@@ -71,7 +71,7 @@ class TaggingService {
 
     async putTag(accessToken, resourceId, tagId, tagValue) {
         const axiosInstance = this.__getAxiosInstance(accessToken);
-        const response = await axiosInstance.put(`${this.baseUrl}/v0/resources/${resourceId}/tags/${tagId}`, {
+        const response = await axiosInstance.put(`${this.baseUrl}/v0/resources/${encodeURIComponent(resourceId)}/tags/${tagId}`, {
             tagValue,
         });
         return response.data;

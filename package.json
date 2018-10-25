@@ -1,8 +1,8 @@
 {
   "name": "cimpress-tagging-service",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A thin client for Cimpress Tagging service",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "eslint --ext .js src; jest --coverage; ./node_modules/.bin/jest-coverage-ratchet",
     "build": "node ./node_modules/babel-cli/bin/babel.js src -d lib --copy-files"
