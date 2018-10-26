@@ -1,6 +1,6 @@
 {
   "name": "cimpress-tagging-service",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A thin client for Cimpress Tagging service",
   "main": "lib/index.js",
   "scripts": {
@@ -28,6 +28,8 @@
     "babel-cli": "^6.26.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.4.0",
     "eslint-config-google": "^0.9.1",
