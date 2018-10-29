@@ -48,18 +48,37 @@ class TaggingService {
         return instance;
     }
 
-    async getResourceTags(accessToken, resourceId, namespace = null) {
+    async getResourceTags(accessToken, resourceUri, namespace = null) {
         const axiosInstance = this.__getAxiosInstance(accessToken);
-        const response = await axiosInstance.get(`${this.baseUrl}/v0/resources/${encodeURIComponent(resourceId)}/tags`, {
-            params: namespace ? {namespace} : {},
+        const response = await axiosInstance.get(`${this.baseUrl}/v0/tags`, {
+            params: {
+                namespace: namespace ? namespace : undefined,
+                resourceUri: resourceUri,
+            },
         });
         return response.data;
     }
 
-    async getTag(accessToken, resourceId, tagId) {
+    async getResourceTagForKey(accessToken, resourceUri, tagKey) {
+        const axiosInstance = this.__getAxiosInstance(accessToken);
+        const response = await axiosInstance.get(`${this.baseUrl}/v0/tags`, {
+            params: {
+                key: tagKey,
+                resourceUri: resourceUri,
+            },
+        });
+
+        if ( response.data.results.length === 0) {
+            throw new TagNotFound();
+        }
+
+        return response.data.results[0];
+    }
+
+    async getTag(accessToken, id) {
         const axiosInstance = this.__getAxiosInstance(accessToken);
         try {
-            const response = await axiosInstance.get(`${this.baseUrl}/v0/resources/${encodeURIComponent(resourceId)}/tags/${tagId}`);
+            const response = await axiosInstance.get(`${this.baseUrl}/v0/tags/${encodeURIComponent(id)}`);
             return response.data;
         } catch (err) {
             if (err.response && err.response.status === 404) {
@@ -69,11 +88,29 @@ class TaggingService {
         }
     }
 
-    async putTag(accessToken, resourceId, tagId, tagValue) {
+    async createTag(accessToken, id, resourceUri, tagKey, tagValue) {
         const axiosInstance = this.__getAxiosInstance(accessToken);
-        const response = await axiosInstance.put(`${this.baseUrl}/v0/resources/${encodeURIComponent(resourceId)}/tags/${tagId}`, {
-            tagValue,
+        const response = await axiosInstance.post(`${this.baseUrl}/v0/tags`, {
+            key: tagKey,
+            value: tagValue,
+            resourceUri: resourceUri,
         });
+        return response.data;
+    }
+
+    async updateTag(accessToken, id, resourceUri, tagKey, tagValue) {
+        const axiosInstance = this.__getAxiosInstance(accessToken);
+        const response = await axiosInstance.put(`${this.baseUrl}/v0/tags/${encodeURIComponent(id)}`, {
+            key: tagKey,
+            value: tagValue,
+            resourceUri: resourceUri,
+        });
+        return response.data;
+    }
+
+    async deleteTag(accessToken, id) {
+        const axiosInstance = this.__getAxiosInstance(accessToken);
+        const response = await axiosInstance.delete(`${this.baseUrl}/v0/tags/${encodeURIComponent(id)}`);
         return response.data;
     }
 }

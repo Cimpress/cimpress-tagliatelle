@@ -1,6 +1,6 @@
 {
   "name": "cimpress-tagging-service",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "A thin client for Cimpress Tagging service",
   "main": "lib/index.js",
   "scripts": {
@@ -40,17 +40,17 @@
   },
   "jest": {
     "coverageReporters": [
-      "json-summary"
+      "text"
     ],
     "collectCoverageFrom": [
       "src/**/*.js"
     ],
     "coverageThreshold": {
       "global": {
-        "lines": 86.84,
-        "statements": 86.84,
-        "functions": 77.78,
-        "branches": 90.48
+        "lines": 85,
+        "statements": 85,
+        "functions": 75,
+        "branches": 78.26
       }
     }
   }
