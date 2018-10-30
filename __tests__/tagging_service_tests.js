@@ -183,7 +183,7 @@ describe('TaggingService', () => {
     describe('deleteTag(accessToken, id)', () => {
         test('Delete a tag', (done) => {
             const ts = new TaggingService();
-            const res = {}
+            const res = {};
             mock.delete(`${ts.baseUrl}/v0/tags/xx`, {
                 status: 204,
                 body: res,

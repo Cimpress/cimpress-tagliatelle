@@ -1,6 +1,7 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import TagNotFound from './errors/TagNotFound';
+import qs from 'qs';
 
 const DEFAULT_BASE_URL = 'https://tagging.trdlnk.cimpress.io';
 
@@ -48,6 +49,30 @@ class TaggingService {
         return instance;
     }
 
+    async getTags(accessToken, searchParams) {
+        let uris = [];
+        if (Array.isArray(searchParams.resourceUri) && searchParams.resourceUri.length > 0) {
+            uris = uris.concat(searchParams.resourceUri);
+        } else if (searchParams.resourceUri) {
+            uris.push(searchParams.resourceUri);
+        }
+
+        const axiosInstance = this.__getAxiosInstance(accessToken);
+        const response = await axiosInstance.get(`${this.baseUrl}/v0/tags`, {
+            params: {
+                namespace: searchParams.namespace ? searchParams.namespace : undefined,
+                key: searchParams.key ? searchParams.key : undefined,
+                resourceUri: uris.length > 0 ? uris : undefined,
+            },
+            paramsSerializer: function(params) {
+                return qs.stringify(params, {indices: false});
+            },
+        });
+
+        return response.data;
+    }
+
+
     async getResourceTags(accessToken, resourceUri, namespace = null) {
         const axiosInstance = this.__getAxiosInstance(accessToken);
         const response = await axiosInstance.get(`${this.baseUrl}/v0/tags`, {
@@ -68,7 +93,7 @@ class TaggingService {
             },
         });
 
-        if ( response.data.results.length === 0) {
+        if (response.data.results.length === 0) {
             throw new TagNotFound();
         }
 
@@ -88,7 +113,7 @@ class TaggingService {
         }
     }
 
-    async createTag(accessToken, id, resourceUri, tagKey, tagValue) {
+    async createTag(accessToken, resourceUri, tagKey, tagValue) {
         const axiosInstance = this.__getAxiosInstance(accessToken);
         const response = await axiosInstance.post(`${this.baseUrl}/v0/tags`, {
             key: tagKey,
