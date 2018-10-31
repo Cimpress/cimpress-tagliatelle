@@ -4,6 +4,19 @@ const mock = require('xhr-mock').default;
 const TaggingService = require('../src/TaggingService');
 const TagNotFound = require('../src/errors/TagNotFound');
 
+describe('x', function() {
+    it('y', function() {
+        let c = new TaggingService();
+        let token ='eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1qbENNemxCTnpneE1ETkJSVFpHTURFd09ETkRSalJGTlRSR04wTXpPRUpETnpORlFrUTROUSJ9.eyJodHRwczovL2NsYWltcy5jaW1wcmVzcy5pby93YXMiOlsiYWRmc3xpc3RhbmlzaGV2QGNpbXByZXNzLmNvbSJdLCJodHRwczovL2NsYWltcy5jaW1wcmVzcy5pby9jaW1wcmVzc19pbnRlcm5hbCI6dHJ1ZSwiaHR0cHM6Ly9jbGFpbXMuY2ltcHJlc3MuaW8vdGVuYW50cyI6WyJjaW1wcmVzcyJdLCJodHRwczovL2NsYWltcy5jaW1wcmVzcy5pby9lbWFpbCI6ImlzdGFuaXNoZXZAY2ltcHJlc3MuY29tIiwiaXNzIjoiaHR0cHM6Ly9jaW1wcmVzcy5hdXRoMC5jb20vIiwic3ViIjoid2FhZHx1LXhkczdFeUhKWE1SRGZpZmJ1M21rbEttYXJuNlZ3bnc0VE9mMFU2Sk1zIiwiYXVkIjpbImh0dHBzOi8vYXBpLmNpbXByZXNzLmlvLyIsImh0dHBzOi8vY2ltcHJlc3MuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTU0MDg4OTQyNiwiZXhwIjoxNTQwOTAzODI2LCJhenAiOiJHMTdIZE5kMDFnQVBmaVNWNXVwYldkaURVbkFVOGlzOSIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgZW1haWwifQ.VLl6Gtlj7rPhg5Ll_UbAk2TQkGn2N46dkE98fEkdDYLagb4KC7qf2QvSduNmWeW0Ge0jqz-ty8-GdVgfKQvDf56tsl1DXjbn8767L4ZIGZ1Q6z2YKE_heZxIDMGtumaoEc__9JPG77dofwKel19owJYdrTD7ILqyp3JsudsV3NLnDi0TxOJKBHeL1JVPEhwMCSEFsElcGfsbdLCxha_hxxC1wMCeUKj4dYEAoVylAqo84_Dd7PbBzCuTot90kQIvDWGmF-KWF0mCAmM7n3ATEQVt0nqAMu9rl0dbVF_Du4iKYdT0zl3s7kUVYnafbC0TivhgLnZJsBKo2gPGyUBo_g';
+        let key='urn:stereotype:templateName';
+        let value = 'Default Platform Order Request Email';
+        let resourceUri = "https://stereotype.trdlnk.cimpress.io/v1/templates/orderRequest-50268a40-Default Platform Order Request Email (with complete information set and merchant item id)";
+
+        //return c.updateTag(token, '977425e5-cd52-491d-a816-ea4fe6373cae', resourceUri, key, value );
+        return c.createTag(token, resourceUri, 'urn:stereotype:templateDescription', 'This template provides a complete set of order information, merchant item id' );
+    });
+});
+
 describe('TaggingService', () => {
   beforeEach(() => mock.setup());
   afterEach(() => mock.teardown());

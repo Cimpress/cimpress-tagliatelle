@@ -3,7 +3,7 @@ import axiosRetry from 'axios-retry';
 import TagNotFound from './errors/TagNotFound';
 import qs from 'qs';
 
-const DEFAULT_BASE_URL = 'https://tagging.trdlnk.cimpress.io';
+const DEFAULT_BASE_URL = 'https://tagliatelle.trdlnk.cimpress.io';
 
 class TaggingService {
     constructor(clientOptions) {

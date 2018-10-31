@@ -1,6 +1,6 @@
 {
   "name": "cimpress-tagging-service",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A thin client for Cimpress Tagging service",
   "main": "lib/index.js",
   "scripts": {
