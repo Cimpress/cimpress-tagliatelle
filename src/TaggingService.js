@@ -64,43 +64,37 @@ class TaggingService {
                 key: searchParams.key ? searchParams.key : undefined,
                 resourceUri: uris.length > 0 ? uris : undefined,
             },
-            paramsSerializer: function(params) {
-                return qs.stringify(params, {indices: false});
-            },
+            paramsSerializer: (params) => qs.stringify(params, {indices: false}),
         });
 
         return response.data;
     }
 
 
-    async getResourceTags(accessToken, resourceUri, namespace = null) {
-        const axiosInstance = this.__getAxiosInstance(accessToken);
-        const response = await axiosInstance.get(`${this.baseUrl}/v0/tags`, {
-            params: {
-                namespace: namespace ? namespace : undefined,
-                resourceUri: resourceUri,
-            },
-        });
-        return response.data;
+    async getTagsByResource(accessToken, resourceUri, namespace = null) {
+        return this.getTags(accessToken, {resourceUri, namespace});
     }
 
-    async getResourceTagForKey(accessToken, resourceUri, tagKey) {
-        const axiosInstance = this.__getAxiosInstance(accessToken);
-        const response = await axiosInstance.get(`${this.baseUrl}/v0/tags`, {
-            params: {
-                key: tagKey,
-                resourceUri: resourceUri,
-            },
-        });
-
-        if (response.data.results.length === 0) {
-            throw new TagNotFound();
-        }
-
-        return response.data.results[0];
+    async getTagsByResources(accessToken, resourcesUriArray, namespace = null) {
+        return this.getTags(accessToken, {resourceUri: resourcesUriArray, namespace});
     }
 
-    async getTag(accessToken, id) {
+    async getTagByResourceAndKey(accessToken, resourceUri, tagKey) {
+        return this.getTags(accessToken, {resourceUri, key: tagKey})
+            .then((res) => {
+                const results = res.results;
+                if (results.length === 0) {
+                    throw new TagNotFound();
+                }
+                return results[0];
+            });
+    }
+
+    async getTagsByKey(accessToken, tagKey) {
+        return this.getTags(accessToken, {key: tagKey});
+    }
+
+    async getTagById(accessToken, id) {
         const axiosInstance = this.__getAxiosInstance(accessToken);
         try {
             const response = await axiosInstance.get(`${this.baseUrl}/v0/tags/${encodeURIComponent(id)}`);

@@ -4,19 +4,6 @@ const mock = require('xhr-mock').default;
 const TaggingService = require('../src/TaggingService');
 const TagNotFound = require('../src/errors/TagNotFound');
 
-describe('x', function() {
-    it('y', function() {
-        let c = new TaggingService();
-        let token ='eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1qbENNemxCTnpneE1ETkJSVFpHTURFd09ETkRSalJGTlRSR04wTXpPRUpETnpORlFrUTROUSJ9.eyJodHRwczovL2NsYWltcy5jaW1wcmVzcy5pby93YXMiOlsiYWRmc3xpc3RhbmlzaGV2QGNpbXByZXNzLmNvbSJdLCJodHRwczovL2NsYWltcy5jaW1wcmVzcy5pby9jaW1wcmVzc19pbnRlcm5hbCI6dHJ1ZSwiaHR0cHM6Ly9jbGFpbXMuY2ltcHJlc3MuaW8vdGVuYW50cyI6WyJjaW1wcmVzcyJdLCJodHRwczovL2NsYWltcy5jaW1wcmVzcy5pby9lbWFpbCI6ImlzdGFuaXNoZXZAY2ltcHJlc3MuY29tIiwiaXNzIjoiaHR0cHM6Ly9jaW1wcmVzcy5hdXRoMC5jb20vIiwic3ViIjoid2FhZHx1LXhkczdFeUhKWE1SRGZpZmJ1M21rbEttYXJuNlZ3bnc0VE9mMFU2Sk1zIiwiYXVkIjpbImh0dHBzOi8vYXBpLmNpbXByZXNzLmlvLyIsImh0dHBzOi8vY2ltcHJlc3MuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTU0MDg4OTQyNiwiZXhwIjoxNTQwOTAzODI2LCJhenAiOiJHMTdIZE5kMDFnQVBmaVNWNXVwYldkaURVbkFVOGlzOSIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgZW1haWwifQ.VLl6Gtlj7rPhg5Ll_UbAk2TQkGn2N46dkE98fEkdDYLagb4KC7qf2QvSduNmWeW0Ge0jqz-ty8-GdVgfKQvDf56tsl1DXjbn8767L4ZIGZ1Q6z2YKE_heZxIDMGtumaoEc__9JPG77dofwKel19owJYdrTD7ILqyp3JsudsV3NLnDi0TxOJKBHeL1JVPEhwMCSEFsElcGfsbdLCxha_hxxC1wMCeUKj4dYEAoVylAqo84_Dd7PbBzCuTot90kQIvDWGmF-KWF0mCAmM7n3ATEQVt0nqAMu9rl0dbVF_Du4iKYdT0zl3s7kUVYnafbC0TivhgLnZJsBKo2gPGyUBo_g';
-        let key='urn:stereotype:templateName';
-        let value = 'Default Platform Order Request Email';
-        let resourceUri = "https://stereotype.trdlnk.cimpress.io/v1/templates/orderRequest-50268a40-Default Platform Order Request Email (with complete information set and merchant item id)";
-
-        //return c.updateTag(token, '977425e5-cd52-491d-a816-ea4fe6373cae', resourceUri, key, value );
-        return c.createTag(token, resourceUri, 'urn:stereotype:templateDescription', 'This template provides a complete set of order information, merchant item id' );
-    });
-});
-
 describe('TaggingService', () => {
   beforeEach(() => mock.setup());
   afterEach(() => mock.teardown());
@@ -24,7 +11,7 @@ describe('TaggingService', () => {
   describe('Constructor ', () => {
     test('Constructs correctly without params', () => {
       const ts = new TaggingService();
-      expect(ts.baseUrl).toBe('https://tagging.trdlnk.cimpress.io');
+      expect(ts.baseUrl).toBe('https://tagliatelle.trdlnk.cimpress.io');
       expect(ts.timeout).toBe(3000);
       expect(ts.retryAttempts).toBe(3);
       expect(ts.retryDelayInMs).toBe(1000);
@@ -54,7 +41,7 @@ describe('TaggingService', () => {
     });
   });
 
-  describe('getResourceTags(accessToken, resourceUri, namespace)', () => {
+  describe('getTagByResource(accessToken, resourceUri, namespace)', () => {
     const resourceUri = 'https://stereotype.trdlnk.cimpress.io/v1/templates/test-template';
     const res = [
       {
@@ -73,10 +60,10 @@ describe('TaggingService', () => {
       const ts = new TaggingService();
       mock.get(`${ts.baseUrl}/v0/tags?resourceUri=${encodeURIComponent(resourceUri)}`, {
         status: 200,
-        body: res,
+        body: {data: res},
       });
 
-      ts.getResourceTags('MY_TOKEN', resourceUri)
+      ts.getTagsByResource('MY_TOKEN', resourceUri)
         .then((data) => {
           expect(data).toBe(res);
           done();
@@ -88,10 +75,58 @@ describe('TaggingService', () => {
       const ts = new TaggingService();
       mock.get(`${ts.baseUrl}/v0/tags?namespace=my-namespace&resourceUri=${encodeURIComponent(resourceUri)}`, {
         status: 200,
-        body: res,
+        body: {data: res},
       });
 
-      ts.getResourceTags('MY_TOKEN', resourceUri, 'my-namespace')
+      ts.getTagsByResource('MY_TOKEN', resourceUri, 'my-namespace')
+        .then((data) => {
+          expect(data).toBe(res);
+          done();
+        })
+        .catch(done);
+    });
+  });
+
+  describe('getTagsByResources(accessToken, resourcesUriArray, namespace)', () => {
+    const resourcesUris = [
+      'https://stereotype.trdlnk.cimpress.io/v1/templates/test-template',
+      'https://stereotype.trdlnk.cimpress.io/v1/templates/test-template2',
+    ];
+    const res = [
+      {
+        'resourceUri': resourcesUris[0],
+        'key': 'urn:stereotype:templateType',
+        'value': 'xml',
+      },
+      {
+        'resourceUri': resourcesUris[1],
+        'key': 'urn:pollAndMail:templateIsActive',
+        'value': 'true',
+      },
+    ];
+
+    test('No namespace specified returns correct values', (done) => {
+      const ts = new TaggingService();
+      mock.get(`${ts.baseUrl}/v0/tags?resourceUri=${encodeURIComponent(resourcesUris[0])}&resourceUri=${encodeURIComponent(resourcesUris[1])}`, {
+        status: 200,
+        body: {data: res},
+      });
+      ts.getTagsByResources('MY_TOKEN', resourcesUris)
+        .then((data) => {
+          expect(data).toBe(res);
+          done();
+        })
+        .catch(done);
+    });
+
+    test('Namespace specified returns correct values', (done) => {
+      const ts = new TaggingService();
+      mock.get(`${ts.baseUrl}/v0/tags?namespace=my-namespace&resourceUri=${encodeURIComponent(resourcesUris[0])}&resourceUri=${encodeURIComponent(resourcesUris[1])}`, {
+        status: 200,
+        body: {data: res},
+      });
+
+      ts.getTagsByResource('MY_TOKEN', resourcesUris, 'my-namespace')
         .then((data) => {
           expect(data).toBe(res);
           done();
@@ -101,62 +136,156 @@ describe('TaggingService', () => {
   });
 
 
-  describe('getResourceTagForKey(accessToken, resourceUri, tagId)', () => {
+  describe('getTagByResourceAndKey(accessToken, resourceUri, tagKey)', () => {
     const resourceUri = 'https://stereotype.trdlnk.cimpress.io/v1/templates/test-template';
-    const tagId = 'urn:stereotype:templateName';
+    const key = 'urn:stereotype:templateType'
     const res = {
       'resourceUri': resourceUri,
-      'tagId': tagId,
-      'tagValue': 'true',
+      'key': key,
+      'value': 'xml',
     };
+
+    test('Returns correct values', (done) => {
+      const ts = new TaggingService();
+      mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(key)}&resourceUri=${encodeURIComponent(resourceUri)}`, {
+        status: 200,
+        body: {
+          data: {
+            results: [res],
+          }
+        },
+      });
+      ts.getTagByResourceAndKey('MY_TOKEN', resourceUri, key)
+        .then((data) => {
+          expect(data).toBe(res);
+          done();
+        })
+        .catch(done);
+    });
 
     test('Throws TagNotFound when tag doesn\'t exist', (done) => {
       const ts = new TaggingService();
-      mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(tagId)}&resourceUri=${encodeURIComponent(resourceUri)}`, {
+      mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(key)}&resourceUri=${encodeURIComponent(resourceUri)}`, {
         status: 200,
         body: {
-          results: [],
+          data: {results: []},
         },
       });
 
-      ts.getResourceTagForKey('MY_TOKEN', resourceUri, tagId)
+      ts.getTagByResourceAndKey('MY_TOKEN', resourceUri, key)
         .catch((err) => {
           expect(err).toBeInstanceOf(TagNotFound);
           done();
         });
     });
+  });
 
-    test('Get existing tag', (done) => {
+
+  describe('getTagsByKey(accessToken, tagKey)', () => {
+    const resourceUri = 'https://stereotype.trdlnk.cimpress.io/v1/templates/test-template';
+    const tagKey = 'urn:stereotype:templateName';
+    const res = {
+      'resourceUri': resourceUri,
+      'tagKey': tagKey,
+      'tagValue': 'true',
+    };
+
+    test('Get existing tags', (done) => {
       const ts = new TaggingService();
-      mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(tagId)}&resourceUri=${encodeURIComponent(resourceUri)}`, {
+      mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(tagKey)}`, {
         status: 200,
         body: {
-            results: [res],
+          data: {results: [res]},
         },
       });
 
-      ts.getResourceTagForKey('MY_TOKEN', resourceUri, tagId)
+      ts.getTagsByKey('MY_TOKEN', tagKey)
         .then((data) => {
-          expect(data).toBe(res);
+          expect(data).toEqual({results: [res]});
+          done();
+        });
+    });
+
+    test('Get existing tags, no results', (done) => {
+      const ts = new TaggingService();
+      mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(tagKey)}`, {
+        status: 200,
+        body: {
+          data: {results: []},
+        },
+      });
+
+      ts.getTagsByKey('MY_TOKEN', tagKey)
+        .then((data) => {
+          expect(data).toEqual({results: []});
           done();
         });
     });
   });
+
+  describe('getTagById(accessToken, id)', () => {
+    const resourceUri = 'https://stereotype.trdlnk.cimpress.io/v1/templates/test-template';
+    const id = '000000000-0000-0000-0000-000000000000'
+    const res = {
+      'resourceUri': resourceUri,
+      'key': 'urn:stereotype:templateType',
+      'value': 'xml',
+    };
+
+    test('Returns correct values', (done) => {
+      const ts = new TaggingService();
+      mock.get(`${ts.baseUrl}/v0/tags/${encodeURIComponent(id)}`, {
+        status: 200,
+        body: res,
+      });
+      ts.getTagById('MY_TOKEN', id)
+        .then((data) => {
+          expect(data).toBe(res);
+          done();
+        })
+        .catch(done);
+    });
+
+    test('Throws TagNotFound when tag doesn\'t exist', (done) => {
+      const ts = new TaggingService();
+      mock.get(`${ts.baseUrl}/v0/tags/${encodeURIComponent(id)}`, {
+        status: 404,
+        body: {
+          data: {results: []},
+        },
+      });
+
+      ts.getTagById('MY_TOKEN', id)
+        .catch((err) => {
+          expect(err).toBeInstanceOf(TagNotFound);
+          done();
+        });
+    });
+  });
+
 
   describe('createTag(accessToken, resourceUri, tagId)', () => {
     const resourceUri = 'https://stereotype.trdlnk.cimpress.io/v1/templates/test';
     const tagId = 'urn:stereotype:templateName';
     const tagValue = 'test';
     const res = {
-      resourceUri: resourceUri,
+      id: 'd3d7e128-c21f-4e57-9838-9ac01c81cd04',
       key: tagId,
       value: tagValue,
+      resourceUri: resourceUri,
+      createdAt: '2018-11-01T11:30:25.293Z',
+      createdBy: "waad|B13t3vPMnXqfQY8Eu2VlPbu7bR-K5Y7aufebBlqye0E",
+      _links: {
+        self: {
+          href: "https://tagging.trdlnk.cimpress.io/v0/tags/d3d7e128-c21f-4e57-9838-9ac01c81cd04"
+        }
+      }
     };
 
     test('Creates a tag', (done) => {
       const ts = new TaggingService();
       mock.post(`${ts.baseUrl}/v0/tags`, {
-        status: 200,
+        status: 201,
         body: res,
       });
 
@@ -168,70 +297,70 @@ describe('TaggingService', () => {
     });
   });
 
-    describe('updateTag(accessToken, id, resourceUri, tagId, tagValue)', () => {
-        const resourceUri = 'https://stereotype.trdlnk.cimpress.io/v1/templates/test';
-        const tagId = 'urn:stereotype:templateName';
-        const tagValue = 'test-2';
-        const res = {
-            resourceUri: resourceUri,
-            key: tagId,
-            value: tagValue,
-        };
+  describe('updateTag(accessToken, id, resourceUri, tagId, tagValue)', () => {
+    const resourceUri = 'https://stereotype.trdlnk.cimpress.io/v1/templates/test';
+    const tagId = 'urn:stereotype:templateName';
+    const tagValue = 'test-2';
+    const res = {
+      resourceUri: resourceUri,
+      key: tagId,
+      value: tagValue,
+    };
 
-        test('Updates a tag', (done) => {
-            const ts = new TaggingService();
-            mock.put(`${ts.baseUrl}/v0/tags/xx`, {
-                status: 200,
-                body: res,
-            });
+    test('Updates a tag', (done) => {
+      const ts = new TaggingService();
+      mock.put(`${ts.baseUrl}/v0/tags/xx`, {
+        status: 200,
+        body: res,
+      });
 
-            ts.updateTag('MY_TOKEN', 'xx', resourceUri, tagId, 'test')
-                .then((data) => {
-                    expect(data).toBe(res);
-                    done();
-                });
+      ts.updateTag('MY_TOKEN', 'xx', resourceUri, tagId, 'test')
+        .then((data) => {
+          expect(data).toBe(res);
+          done();
         });
     });
+  });
 
-    describe('deleteTag(accessToken, id)', () => {
-        test('Delete a tag', (done) => {
-            const ts = new TaggingService();
-            const res = {};
-            mock.delete(`${ts.baseUrl}/v0/tags/xx`, {
-                status: 204,
-                body: res,
-            });
+  describe('deleteTag(accessToken, id)', () => {
+    test('Delete a tag', (done) => {
+      const ts = new TaggingService();
+      const res = {};
+      mock.delete(`${ts.baseUrl}/v0/tags/xx`, {
+        status: 204,
+        body: res,
+      });
 
-            ts.deleteTag('MY_TOKEN', 'xx')
-                .then((data) => {
-                    expect(data).toBe(res);
-                    done();
-                });
+      ts.deleteTag('MY_TOKEN', 'xx')
+        .then((data) => {
+          expect(data).toBe(res);
+          done();
         });
     });
+  });
 
-    describe('getTag(accessToken, id)', () => {
-        test('Get a tag', (done) => {
-            const resourceUri = 'https://stereotype.trdlnk.cimpress.io/v1/templates/test';
-            const tagId = 'urn:stereotype:templateName';
-            const tagValue = 'test-2';
-            const res = {
-                resourceUri: resourceUri,
-                key: tagId,
-                value: tagValue,
-            };
+  describe('getTagById(accessToken, id)', () => {
+    test('Get a tag', (done) => {
+      const resourceUri = 'https://stereotype.trdlnk.cimpress.io/v1/templates/test';
+      const tagId = 'urn:stereotype:templateName';
+      const tagValue = 'test-2';
+      const res = {
+        resourceUri: resourceUri,
+        key: tagId,
+        value: tagValue,
+      };
 
-            const ts = new TaggingService();
-            mock.get(`${ts.baseUrl}/v0/tags/xx`, {
-                status: 204,
-                body: res,
-            });
+      const ts = new TaggingService();
+      mock.get(`${ts.baseUrl}/v0/tags/xx`, {
+        status: 204,
+        body: res,
+      });
 
-            ts.getTag('MY_TOKEN', 'xx')
-                .then((data) => {
-                    expect(data).toBe(res);
-                    done();
-                });
+      ts.getTagById('MY_TOKEN', 'xx')
+        .then((data) => {
+          expect(data).toBe(res);
+          done();
         });
     });
+  });
 });
