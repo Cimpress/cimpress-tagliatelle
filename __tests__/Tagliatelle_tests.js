@@ -1,7 +1,7 @@
 'use strict';
 
 const mock = require('xhr-mock').default;
-const TaggingService = require('../src/Tagliatelle');
+const Tagliatelle = require('../src/Tagliatelle');
 const TagNotFound = require('../src/errors/TagNotFound');
 
 describe('Tagliatelle', () => {
@@ -10,7 +10,7 @@ describe('Tagliatelle', () => {
 
   describe('Constructor ', () => {
     test('Constructs correctly without params', () => {
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       expect(ts.baseUrl).toBe('https://tagliatelle.trdlnk.cimpress.io');
       expect(ts.timeout).toBe(3000);
       expect(ts.retryAttempts).toBe(3);
@@ -19,12 +19,12 @@ describe('Tagliatelle', () => {
 
     test('Constructs correctly with params', () => {
       const params = {
-        baseUrl: 'https://tagging2.cimpress.io',
+        baseUrl: 'https://tagliatelle2.cimpress.io',
         timeout: 1000,
         retryAttempts: 6,
         retryDelayInMs: 0,
       };
-      const ts = new TaggingService(params);
+      const ts = new Tagliatelle(params);
       expect(ts.baseUrl).toBe(params.baseUrl);
       expect(ts.timeout).toBe(params.timeout);
       expect(ts.retryAttempts).toBe(params.retryAttempts);
@@ -36,7 +36,7 @@ describe('Tagliatelle', () => {
       const params = {
         fakeParam: 1234,
       };
-      const ts = new TaggingService(params);
+      const ts = new Tagliatelle(params);
       expect(console.error).toBeCalled();
     });
   });
@@ -57,7 +57,7 @@ describe('Tagliatelle', () => {
     ];
 
     test('No namespace specified returns correct values', (done) => {
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       mock.get(`${ts.baseUrl}/v0/tags?resourceUri=${encodeURIComponent(resourceUri)}`, {
         status: 200,
         body: res,
@@ -72,7 +72,7 @@ describe('Tagliatelle', () => {
     });
 
     test('Namespace specified returns correct values', (done) => {
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       mock.get(`${ts.baseUrl}/v0/tags?namespace=my-namespace&resourceUri=${encodeURIComponent(resourceUri)}`, {
         status: 200,
         body: res,
@@ -106,7 +106,7 @@ describe('Tagliatelle', () => {
     ];
 
     test('No namespace specified returns correct values', (done) => {
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       mock.get(`${ts.baseUrl}/v0/tags?resourceUri=${encodeURIComponent(resourcesUris[0])}&resourceUri=${encodeURIComponent(resourcesUris[1])}`, {
         status: 200,
         body: res,
@@ -120,7 +120,7 @@ describe('Tagliatelle', () => {
     });
 
     test('Namespace specified returns correct values', (done) => {
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       mock.get(`${ts.baseUrl}/v0/tags?namespace=my-namespace&resourceUri=${encodeURIComponent(resourcesUris[0])}&resourceUri=${encodeURIComponent(resourcesUris[1])}`, {
         status: 200,
         body: res,
@@ -146,7 +146,7 @@ describe('Tagliatelle', () => {
     };
 
     test('Returns correct values', (done) => {
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(key)}&resourceUri=${encodeURIComponent(resourceUri)}`, {
         status: 200,
         body: {
@@ -162,7 +162,7 @@ describe('Tagliatelle', () => {
     });
 
     test('Throws TagNotFound when tag doesn\'t exist', (done) => {
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(key)}&resourceUri=${encodeURIComponent(resourceUri)}`, {
         status: 200,
         body: {
@@ -189,7 +189,7 @@ describe('Tagliatelle', () => {
     };
 
     test('Get existing tags', (done) => {
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(tagKey)}`, {
         status: 200,
         body: {
@@ -205,7 +205,7 @@ describe('Tagliatelle', () => {
     });
 
     test('Get existing tags, no results', (done) => {
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(tagKey)}`, {
         status: 200,
         body: {
@@ -231,7 +231,7 @@ describe('Tagliatelle', () => {
     };
 
     test('Returns correct values', (done) => {
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       mock.get(`${ts.baseUrl}/v0/tags/${encodeURIComponent(id)}`, {
         status: 200,
         body: res,
@@ -245,7 +245,7 @@ describe('Tagliatelle', () => {
     });
 
     test('Throws TagNotFound when tag doesn\'t exist', (done) => {
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       mock.get(`${ts.baseUrl}/v0/tags/${encodeURIComponent(id)}`, {
         status: 404,
         body: {
@@ -275,13 +275,13 @@ describe('Tagliatelle', () => {
       createdBy: "waad|B13t3vPMnXqfQY8Eu2VlPbu7bR-K5Y7aufebBlqye0E",
       _links: {
         self: {
-          href: "https://tagging.trdlnk.cimpress.io/v0/tags/d3d7e128-c21f-4e57-9838-9ac01c81cd04"
+          href: "https://tagliatelle.trdlnk.cimpress.io/v0/tags/d3d7e128-c21f-4e57-9838-9ac01c81cd04"
         }
       }
     };
 
     test('Creates a tag', (done) => {
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       mock.post(`${ts.baseUrl}/v0/tags`, {
         status: 201,
         body: res,
@@ -306,7 +306,7 @@ describe('Tagliatelle', () => {
     };
 
     test('Updates a tag', (done) => {
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       mock.put(`${ts.baseUrl}/v0/tags/xx`, {
         status: 200,
         body: res,
@@ -322,7 +322,7 @@ describe('Tagliatelle', () => {
 
   describe('deleteTag(accessToken, id)', () => {
     test('Delete a tag', (done) => {
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       const res = {};
       mock.delete(`${ts.baseUrl}/v0/tags/xx`, {
         status: 204,
@@ -348,7 +348,7 @@ describe('Tagliatelle', () => {
         value: tagValue,
       };
 
-      const ts = new TaggingService();
+      const ts = new Tagliatelle();
       mock.get(`${ts.baseUrl}/v0/tags/xx`, {
         status: 204,
         body: res,

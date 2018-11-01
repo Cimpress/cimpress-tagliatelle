@@ -1,33 +1,33 @@
-# Cimpress Tagging Service client
+# Cimpress Tagliatelle client
 
-This project contains a thin client library for Cimpress' Tagging service.
+This project contains a thin client library for Cimpress' Tagliatelle service.
 
 ## Usage
 
 In order to use the client
 
-`npm install cimpress-tagging-service --save`
+`npm install cimpress-tagliatelle --save`
 
 and once the package is available
 
 ### Import
 
-`const TaggingService = require('cimpress-tagging-service');`
+`const Tagliatelle = require('cimpress-tagliatelle');`
 
 or 
 
-`import TaggingService from 'cimpress-tagging-service'`
+`import Tagliatelle from 'cimpress-tagliatelle'`
 
 ### Instantiation
 ```
 const options = {
-   baseUrl: 'string', // Base url of the service, by default it will be https://tagging.trdlnk.cimpress.io
+   baseUrl: 'string', // Base url of the service, by default it will be https://tagliatelle.trdlnk.cimpress.io
    timeout: '3000', // Default: 3000 ms
    retries: 3, // By default there are 3 retries
    retryDelayInMs: 1000 // Default: 1000
 }
 
-const taggingService = new TaggingService(options);
+const tagliatelle = new Tagliatelle(options);
 
 ```
 ### Class functions 
@@ -42,7 +42,7 @@ const taggingService = new TaggingService(options);
 
     // Get all the tags asociated to a resource, filtered by namespace if provided.
 
-    taggingService
+    tagliatelle
         .getTagsByResource(accessToken, resourceUri, namespace) // The 3rd parameter namespace is optional
         .then(data => {
             console.log(data)
@@ -60,7 +60,7 @@ const taggingService = new TaggingService(options);
                     createdBy: '[SUB]',
                     _links: {
                         "self": {
-                            "href": "https://tagging.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000000"
+                            "href": "https://tagliatelle.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000000"
                         }
                     }
                 },
@@ -73,7 +73,7 @@ const taggingService = new TaggingService(options);
                     createdBy: '[SUB]',
                     _links: {
                         "self": {
-                            "href": "https://tagging.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000001"
+                            "href": "https://tagliatelle.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000001"
                         }
                     }
                 },
@@ -88,7 +88,7 @@ const taggingService = new TaggingService(options);
         "https://stereotype.trdlnk.cimpress.io/v1/templates/demo",
         "https://stereotype.trdlnk.cimpress.io/v1/templates/demo2"
     ]
-    taggingService
+    tagliatelle
         .getTagsByResources(accessToken, resourcesUris, namespace) // The 3rd parameter namespace is optional
         .then(data => {
             console.log(data)
@@ -106,7 +106,7 @@ const taggingService = new TaggingService(options);
                     createdBy: '[SUB]',
                     _links: {
                         "self": {
-                            "href": "https://tagging.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000000"
+                            "href": "https://tagliatelle.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000000"
                         }
                     }
                 },
@@ -119,7 +119,7 @@ const taggingService = new TaggingService(options);
                     createdBy: '[SUB]',
                     _links: {
                         "self": {
-                            "href": "https://tagging.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000001"
+                            "href": "https://tagliatelle.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000001"
                         }
                     }
                 },
@@ -131,7 +131,7 @@ const taggingService = new TaggingService(options);
         
     // Get the tag asociated with the key and the resourceUri asociated
     const key = "urn:stereotype:isTest";
-    taggingService
+    tagliatelle
         .getTagByResourceAndKey(accessToken, resourceUri, key)
         .then(data => {
             console.log(data)
@@ -145,7 +145,7 @@ const taggingService = new TaggingService(options);
                 createdBy: '[SUB]',
                 _links: {
                     "self": {
-                        "href": "https://tagging.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000000"
+                        "href": "https://tagliatelle.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000000"
                     }
                 }
             }
@@ -154,7 +154,7 @@ const taggingService = new TaggingService(options);
     
     
     // Get all the tags with the key provided
-    taggingService
+    tagliatelle
         .getTagsByKey(accessToken, key)
         .then(data => {
             console.log(data)
@@ -172,7 +172,7 @@ const taggingService = new TaggingService(options);
                     createdBy: '[SUB]',
                     _links: {
                         "self": {
-                            "href": "https://tagging.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000000"
+                            "href": "https://tagliatelle.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000000"
                         }
                     }
                 },
@@ -185,7 +185,7 @@ const taggingService = new TaggingService(options);
                     createdBy: '[SUB]',
                     _links: {
                         "self": {
-                            "href": "https://tagging.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000001"
+                            "href": "https://tagliatelle.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000001"
                         }
                     }
                 },
@@ -197,7 +197,7 @@ const taggingService = new TaggingService(options);
         
     // Get the tag with the id provided
     const id = '00000000-0000-0000-0000-000000000000';
-    taggingService
+    tagliatelle
         .getTagById(accessToken,id)
         .then(data => {
             console.log(data)
@@ -211,7 +211,7 @@ const taggingService = new TaggingService(options);
                 createdBy: '[SUB]',
                 _links: {
                     "self": {
-                        "href": "https://tagging.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000000"
+                        "href": "https://tagliatelle.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000000"
                     }
                 }
             }
@@ -222,7 +222,7 @@ const taggingService = new TaggingService(options);
     // Creates a tag in a specific resource
 
     const tagValue = true;
-    taggingService
+    tagliatelle
         .createTag(accessToken, resourceUri, tagKey, tagValue) 
         .then(tag => {
             console.log(tag);
@@ -236,7 +236,7 @@ const taggingService = new TaggingService(options);
                 createdBy: '[SUB]',
                 _links: {
                     "self": {
-                        "href": "https://tagging.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000000"
+                        "href": "https://tagliatelle.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000000"
                     }
                 }
             }
@@ -247,7 +247,7 @@ const taggingService = new TaggingService(options);
     // Updates a tag
 
     const tagValue = true;
-    taggingService
+    tagliatelle
         .updateTag(accessToken, id, resourceUri, key, tagValue) 
         .then(tag => {
             console.log(tag);
@@ -261,7 +261,7 @@ const taggingService = new TaggingService(options);
                 createdBy: '[SUB]',
                 _links: {
                     "self": {
-                        "href": "https://tagging.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000000"
+                        "href": "https://tagliatelle.trdlnk.cimpress.io/v0/tags/00000000-0000-0000-0000-000000000000"
                     }
                 }
             }
@@ -271,7 +271,7 @@ const taggingService = new TaggingService(options);
     // Deletes a tag
 
     const tagValue = true;
-    taggingService
+    tagliatelle
         .deleteTag(accessToken, id) 
         .then(tag => { /* no-content */})
 
