@@ -1,3 +1,3 @@
-const TaggingService = require('./TaggingService');
+const Tagliatelle = require('./Tagliatelle');
 
-module.exports = TaggingService;
+module.exports = Tagliatelle;

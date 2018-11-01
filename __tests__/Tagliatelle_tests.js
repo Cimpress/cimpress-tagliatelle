@@ -1,10 +1,10 @@
 'use strict';
 
 const mock = require('xhr-mock').default;
-const TaggingService = require('../src/TaggingService');
+const TaggingService = require('../src/Tagliatelle');
 const TagNotFound = require('../src/errors/TagNotFound');
 
-describe('TaggingService', () => {
+describe('Tagliatelle', () => {
   beforeEach(() => mock.setup());
   afterEach(() => mock.teardown());
 

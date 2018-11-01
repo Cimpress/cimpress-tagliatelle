@@ -5,7 +5,7 @@ import qs from 'qs';
 
 const DEFAULT_BASE_URL = 'https://tagliatelle.trdlnk.cimpress.io';
 
-class TaggingService {
+class Tagliatelle {
     constructor(clientOptions) {
         const understoodOptions = ['baseUrl', 'timeout', 'retryAttempts', 'retryDelayInMs'];
         const options = clientOptions || {};
@@ -23,7 +23,7 @@ class TaggingService {
             .forEach((passedOption) => {
                 if (understoodOptions.indexOf(passedOption) === -1) {
                     // eslint-disable-next-line no-console
-                    console.error(`[TaggingService] Option '${passedOption}' is not understood and will be ignored.`);
+                    console.error(`[Tagliatelle] Option '${passedOption}' is not understood and will be ignored.`);
                 }
             });
     }
@@ -134,4 +134,4 @@ class TaggingService {
     }
 }
 
-module.exports = TaggingService;
+module.exports = Tagliatelle;

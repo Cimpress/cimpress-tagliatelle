@@ -1,5 +1,5 @@
 {
-  "name": "cimpress-tagging-service",
+  "name": "cimpress-tagliatelle",
   "version": "0.0.1",
   "description": "A thin client for Cimpress Tagliatelle ",
   "main": "lib/index.js",
@@ -18,7 +18,8 @@
   },
   "keywords": [
     "cimpress",
-    "tagging"
+    "tagging",
+    "tagliatelle"
   ],
   "dependencies": {
     "axios": "^0.18.0",
