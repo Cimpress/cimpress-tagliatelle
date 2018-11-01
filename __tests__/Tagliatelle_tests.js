@@ -60,7 +60,7 @@ describe('Tagliatelle', () => {
       const ts = new TaggingService();
       mock.get(`${ts.baseUrl}/v0/tags?resourceUri=${encodeURIComponent(resourceUri)}`, {
         status: 200,
-        body: {data: res},
+        body: res,
       });
 
       ts.getTagsByResource('MY_TOKEN', resourceUri)
@@ -75,7 +75,7 @@ describe('Tagliatelle', () => {
       const ts = new TaggingService();
       mock.get(`${ts.baseUrl}/v0/tags?namespace=my-namespace&resourceUri=${encodeURIComponent(resourceUri)}`, {
         status: 200,
-        body: {data: res},
+        body: res,
       });
 
       ts.getTagsByResource('MY_TOKEN', resourceUri, 'my-namespace')
@@ -109,7 +109,7 @@ describe('Tagliatelle', () => {
       const ts = new TaggingService();
       mock.get(`${ts.baseUrl}/v0/tags?resourceUri=${encodeURIComponent(resourcesUris[0])}&resourceUri=${encodeURIComponent(resourcesUris[1])}`, {
         status: 200,
-        body: {data: res},
+        body: res,
       });
       ts.getTagsByResources('MY_TOKEN', resourcesUris)
         .then((data) => {
@@ -123,7 +123,7 @@ describe('Tagliatelle', () => {
       const ts = new TaggingService();
       mock.get(`${ts.baseUrl}/v0/tags?namespace=my-namespace&resourceUri=${encodeURIComponent(resourcesUris[0])}&resourceUri=${encodeURIComponent(resourcesUris[1])}`, {
         status: 200,
-        body: {data: res},
+        body: res,
       });
 
       ts.getTagsByResource('MY_TOKEN', resourcesUris, 'my-namespace')
@@ -150,9 +150,7 @@ describe('Tagliatelle', () => {
       mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(key)}&resourceUri=${encodeURIComponent(resourceUri)}`, {
         status: 200,
         body: {
-          data: {
-            results: [res],
-          }
+          results: [res],
         },
       });
       ts.getTagByResourceAndKey('MY_TOKEN', resourceUri, key)
@@ -168,7 +166,7 @@ describe('Tagliatelle', () => {
       mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(key)}&resourceUri=${encodeURIComponent(resourceUri)}`, {
         status: 200,
         body: {
-          data: {results: []},
+          results: [],
         },
       });
 
@@ -195,7 +193,7 @@ describe('Tagliatelle', () => {
       mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(tagKey)}`, {
         status: 200,
         body: {
-          data: {results: [res]},
+          results: [res],
         },
       });
 
@@ -211,7 +209,7 @@ describe('Tagliatelle', () => {
       mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(tagKey)}`, {
         status: 200,
         body: {
-          data: {results: []},
+          results: [],
         },
       });
 
