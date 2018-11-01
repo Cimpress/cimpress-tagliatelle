@@ -1,7 +1,7 @@
 {
   "name": "cimpress-tagging-service",
-  "version": "0.1.2",
-  "description": "A thin client for Cimpress Tagging service",
+  "version": "0.0.1",
+  "description": "A thin client for Cimpress Tagliatelle ",
   "main": "lib/index.js",
   "scripts": {
     "test": "eslint --ext .js src; jest --coverage; ./node_modules/.bin/jest-coverage-ratchet",
@@ -11,10 +11,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Cimpress/cimpress-tagging-service.git"
+    "url": "https://github.com/Cimpress/cimpress-tagliatelle.git"
   },
   "bugs": {
-    "url": "https://github.com/Cimpress/cimpress-tagging-service/issues"
+    "url": "https://github.com/Cimpress/cimpress-tagliatelle/issues"
   },
   "keywords": [
     "cimpress",
