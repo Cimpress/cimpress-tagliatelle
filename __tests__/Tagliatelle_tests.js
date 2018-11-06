@@ -295,6 +295,61 @@ describe('Tagliatelle', () => {
     });
   });
 
+    describe('createOrUpdateTag(accessToken, resourceUri, tagId)', () => {
+        const resourceUri = 'https://stereotype.trdlnk.cimpress.io/v1/templates/test';
+        const tagId = 'urn:stereotype:templateName';
+        const tagValue = 'test';
+        const res = {
+            id: 'd3d7e128-c21f-4e57-9838-9ac01c81cd04',
+            key: tagId,
+            value: tagValue,
+            resourceUri: resourceUri,
+            createdAt: '2018-11-01T11:30:25.293Z',
+            createdBy: "waad|B13t3vPMnXqfQY8Eu2VlPbu7bR-K5Y7aufebBlqye0E",
+            _links: {
+                self: {
+                    href: "https://tagliatelle.trdlnk.cimpress.io/v0/tags/d3d7e128-c21f-4e57-9838-9ac01c81cd04"
+                }
+            }
+        };
+
+        test('Creates a tag when does not exist', (done) => {
+            const ts = new Tagliatelle();
+            mock.get(`${ts.baseUrl}/v0/tags?key=urn%3Astereotype%3AtemplateName&resourceUri=https%3A%2F%2Fstereotype.trdlnk.cimpress.io%2Fv1%2Ftemplates%2Ftest`, {
+                status: 201,
+                body: {results: []},
+            });
+            mock.post(`${ts.baseUrl}/v0/tags`, {
+                status: 201,
+                body: res,
+            });
+
+            ts.createOrUpdateTag('MY_TOKEN', resourceUri, tagId, 'test')
+                .then((data) => {
+                    expect(data).toBe(res);
+                    done();
+                });
+        });
+
+        test('Updates a tag when it does exist', (done) => {
+            const ts = new Tagliatelle();
+            mock.get(`${ts.baseUrl}/v0/tags?key=urn%3Astereotype%3AtemplateName&resourceUri=https%3A%2F%2Fstereotype.trdlnk.cimpress.io%2Fv1%2Ftemplates%2Ftest`, {
+                status: 201,
+                body: {results: [res]},
+            });
+            mock.put(`${ts.baseUrl}/v0/tags/d3d7e128-c21f-4e57-9838-9ac01c81cd04`, {
+                status: 201,
+                body: res,
+            });
+
+            ts.createOrUpdateTag('MY_TOKEN', resourceUri, tagId, 'test')
+                .then((data) => {
+                    expect(data).toBe(res);
+                    done();
+                });
+        });
+    });
+
   describe('updateTag(accessToken, id, resourceUri, tagId, tagValue)', () => {
     const resourceUri = 'https://stereotype.trdlnk.cimpress.io/v1/templates/test';
     const tagId = 'urn:stereotype:templateName';

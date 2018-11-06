@@ -1,7 +1,7 @@
 {
   "name": "cimpress-tagliatelle",
-  "version": "0.0.1",
-  "description": "A thin client for Cimpress Tagliatelle ",
+  "version": "0.1.0",
+  "description": "A thin client for Cimpress Tagliatelle service",
   "main": "lib/index.js",
   "scripts": {
     "test": "eslint --ext .js src; jest --coverage; ./node_modules/.bin/jest-coverage-ratchet",

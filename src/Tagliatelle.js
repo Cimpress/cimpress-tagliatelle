@@ -1,6 +1,7 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import TagNotFound from './errors/TagNotFound';
+import ConflictError from './errors/ConflictError';
 import qs from 'qs';
 
 const DEFAULT_BASE_URL = 'https://tagliatelle.trdlnk.cimpress.io';
@@ -105,6 +106,20 @@ class Tagliatelle {
             }
             throw err;
         }
+    }
+
+    async createOrUpdateTag(accessToken, resourceUri, tagKey, tagValue) {
+        return this.getTags(accessToken, {resourceUri, key: tagKey})
+            .then((res) => {
+                const results = res.results;
+                if (results.length === 0) {
+                    return this.createTag(accessToken, resourceUri, tagKey, tagValue);
+                }
+                if (results.length === 1) {
+                    return this.updateTag(accessToken, results[0].id, resourceUri, tagKey, tagValue);
+                }
+                throw new ConflictError('Multiple tags matching.');
+            });
     }
 
     async createTag(accessToken, resourceUri, tagKey, tagValue) {
