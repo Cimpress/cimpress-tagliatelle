@@ -9,3 +9,4 @@ rules:
   valid-jsdoc: 0
   max-len: [error, 150]
   operator-linebreak: [2, "before"]
+  indent: [error, 4]
