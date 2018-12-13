@@ -8,7 +8,7 @@ const DEFAULT_BASE_URL = 'https://tagliatelle.trdlnk.cimpress.io';
 
 class Tagliatelle {
     constructor(clientOptions) {
-        const understoodOptions = ['baseUrl', 'timeout', 'retryAttempts', 'retryDelayInMs'];
+        const understoodOptions = ['baseUrl', 'timeout', 'retryAttempts', 'retryDelayInMs', 'autoFetchPagedResults'];
         const options = clientOptions || {};
         const timeout = parseInt(options.timeout, 10);
         const retryAttempts = parseInt(options.retryAttempts, 10);
@@ -18,6 +18,7 @@ class Tagliatelle {
         this.timeout = timeout >= 0 ? timeout : 3000;
         this.retryAttempts = retryAttempts >= 0 ? retryAttempts : 3;
         this.retryDelayInMs = retryDelayInMs >= 0 ? retryDelayInMs : 1000;
+        this.autoFetchPagedResults = options.autoFetchPagedResults || false;
 
         Object
             .keys(options)
@@ -51,6 +52,25 @@ class Tagliatelle {
     }
 
     async getTags(accessToken, searchParams) {
+        let results = await this.__getTagsPartial(accessToken, searchParams);
+        if (!this.autoFetchPagedResults || results.total === results.count + (results.offset||0)) {
+            return results;
+        }
+
+        let total = results.total;
+        let fullResults = results;
+        let retrievedCount = results.count;
+        while (retrievedCount < total) {
+            searchParams.offset = retrievedCount;
+            let partial = await this.__getTagsPartial(accessToken, searchParams);
+            retrievedCount += partial.count;
+            fullResults.count = retrievedCount;
+            fullResults.results = fullResults.results.concat(partial.results);
+        }
+        return fullResults;
+    }
+
+    async __getTagsPartial(accessToken, searchParams) {
         let uris = [];
         if (Array.isArray(searchParams.resourceUri) && searchParams.resourceUri.length > 0) {
             uris = uris.concat(searchParams.resourceUri);
@@ -58,12 +78,20 @@ class Tagliatelle {
             uris.push(searchParams.resourceUri);
         }
 
+        let keys = [];
+        if (Array.isArray(searchParams.key) && searchParams.key.length > 0) {
+            keys = keys.concat(searchParams.key);
+        } else if (searchParams.key) {
+            keys.push(searchParams.key);
+        }
+
         const axiosInstance = this.__getAxiosInstance(accessToken);
         const response = await axiosInstance.get(`${this.baseUrl}/v0/tags`, {
             params: {
                 namespace: searchParams.namespace ? searchParams.namespace : undefined,
-                key: searchParams.key ? searchParams.key : undefined,
+                key: keys.length > 0 ? keys : undefined,
                 resourceUri: uris.length > 0 ? uris : undefined,
+                offset: Number.isInteger(Number(searchParams.offset)) && Number(searchParams.offset)>0 ? searchParams.offset : undefined,
             },
             paramsSerializer: (params) => qs.stringify(params, {indices: false}),
         });
@@ -71,17 +99,16 @@ class Tagliatelle {
         return response.data;
     }
 
-
-    async getTagsByResource(accessToken, resourceUri, namespace = null) {
-        return this.getTags(accessToken, {resourceUri, namespace});
+    async getTagsByResource(accessToken, resourceUri, namespace = null, offset = null) {
+        return this.__getTagsPartial(accessToken, {resourceUri, namespace, offset});
     }
 
-    async getTagsByResources(accessToken, resourcesUriArray, namespace = null) {
-        return this.getTags(accessToken, {resourceUri: resourcesUriArray, namespace});
+    async getTagsByResources(accessToken, resourcesUriArray, namespace = null, offset = null) {
+        return this.__getTagsPartial(accessToken, {resourceUri: resourcesUriArray, namespace, offset});
     }
 
-    async getTagByResourceAndKey(accessToken, resourceUri, tagKey) {
-        return this.getTags(accessToken, {resourceUri, key: tagKey})
+    async getTagByResourceAndKey(accessToken, resourceUri, tagKey, offset = null) {
+        return this.__getTagsPartial(accessToken, {resourceUri, key: tagKey, offset})
             .then((res) => {
                 const results = res.results;
                 if (results.length === 0) {
@@ -91,8 +118,8 @@ class Tagliatelle {
             });
     }
 
-    async getTagsByKey(accessToken, tagKey) {
-        return this.getTags(accessToken, {key: tagKey});
+    async getTagsByKey(accessToken, tagKey, offset = null) {
+        return this.__getTagsPartial(accessToken, {key: tagKey, offset});
     }
 
     async getTagById(accessToken, id) {
@@ -109,7 +136,7 @@ class Tagliatelle {
     }
 
     async createOrUpdateTag(accessToken, resourceUri, tagKey, tagValue) {
-        return this.getTags(accessToken, {resourceUri, key: tagKey})
+        return this.__getTagsPartial(accessToken, {resourceUri, key: tagKey})
             .then((res) => {
                 const results = res.results;
                 if (results.length === 0) {
