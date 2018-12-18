@@ -97,7 +97,6 @@ class Tagliatelle {
                 namespace: searchParams.namespace ? searchParams.namespace : undefined,
                 key: keys.length > 0 ? keys : undefined,
                 resourceUri: uris.length > 0 ? uris : undefined,
-                skipCache: Math.random(),
                 offset: Number.isInteger(Number(searchParams.offset)) && Number(searchParams.offset)>0 ? searchParams.offset : undefined,
             }),
             paramsSerializer: (params) => qs.stringify(params, {indices: false}),
