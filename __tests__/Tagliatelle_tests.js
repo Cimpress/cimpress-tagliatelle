@@ -58,7 +58,7 @@ describe('Tagliatelle', () => {
 
         test('No namespace specified returns correct values', (done) => {
             const ts = new Tagliatelle();
-            mock.get(`${ts.baseUrl}/v0/tags?resourceUri=${encodeURIComponent(resourceUri)}`, {
+            mock.get(new RegExp(`${ts.baseUrl}/v0/tags?(.*)&resourceUri=${encodeURIComponent(resourceUri)}`), {
                 status: 200,
                 body: res,
             });
@@ -73,7 +73,7 @@ describe('Tagliatelle', () => {
 
         test('Namespace specified returns correct values', (done) => {
             const ts = new Tagliatelle();
-            mock.get(`${ts.baseUrl}/v0/tags?namespace=my-namespace&resourceUri=${encodeURIComponent(resourceUri)}`, {
+            mock.get(new RegExp(`${ts.baseUrl}/v0/tags?(.*)&namespace=my-namespace&resourceUri=${encodeURIComponent(resourceUri)}`), {
                 status: 200,
                 body: res,
             });
@@ -107,7 +107,7 @@ describe('Tagliatelle', () => {
 
         test('No namespace specified returns correct values', (done) => {
             const ts = new Tagliatelle();
-            mock.get(`${ts.baseUrl}/v0/tags?resourceUri=${encodeURIComponent(resourcesUris[0])}&resourceUri=${encodeURIComponent(resourcesUris[1])}`, {
+            mock.get(new RegExp(`${ts.baseUrl}/v0/tags?(.*)&resourceUri=${encodeURIComponent(resourcesUris[0])}&resourceUri=${encodeURIComponent(resourcesUris[1])}`), {
                 status: 200,
                 body: res,
             });
@@ -121,7 +121,7 @@ describe('Tagliatelle', () => {
 
         test('No namespace specified returns correct values with offset', (done) => {
             const ts = new Tagliatelle();
-            mock.get(`${ts.baseUrl}/v0/tags?resourceUri=${encodeURIComponent(resourcesUris[0])}&resourceUri=${encodeURIComponent(resourcesUris[1])}&offset=1`, {
+            mock.get(new RegExp(`${ts.baseUrl}/v0/tags?(.*)&resourceUri=${encodeURIComponent(resourcesUris[0])}&resourceUri=${encodeURIComponent(resourcesUris[1])}&offset=1`), {
                 status: 200,
                 body: res,
             });
@@ -135,7 +135,7 @@ describe('Tagliatelle', () => {
 
         test('Namespace specified returns correct values', (done) => {
             const ts = new Tagliatelle();
-            mock.get(`${ts.baseUrl}/v0/tags?namespace=my-namespace&resourceUri=${encodeURIComponent(resourcesUris[0])}&resourceUri=${encodeURIComponent(resourcesUris[1])}`, {
+            mock.get(new RegExp(`${ts.baseUrl}/v0/tags?(.*)&namespace=my-namespace&resourceUri=${encodeURIComponent(resourcesUris[0])}&resourceUri=${encodeURIComponent(resourcesUris[1])}`), {
                 status: 200,
                 body: res,
             });
@@ -161,7 +161,7 @@ describe('Tagliatelle', () => {
 
         test('Returns correct values', (done) => {
             const ts = new Tagliatelle();
-            mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(key)}&resourceUri=${encodeURIComponent(resourceUri)}`, {
+            mock.get(new RegExp(`${ts.baseUrl}/v0/tags?(.*)&key=${encodeURIComponent(key)}&resourceUri=${encodeURIComponent(resourceUri)}`), {
                 status: 200,
                 body: {
                     results: [res],
@@ -177,7 +177,7 @@ describe('Tagliatelle', () => {
 
         test('Throws TagNotFound when tag doesn\'t exist', (done) => {
             const ts = new Tagliatelle();
-            mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(key)}&resourceUri=${encodeURIComponent(resourceUri)}`, {
+            mock.get(new RegExp(`${ts.baseUrl}/v0/tags?(.*)&key=${encodeURIComponent(key)}&resourceUri=${encodeURIComponent(resourceUri)}`), {
                 status: 200,
                 body: {
                     results: [],
@@ -204,7 +204,7 @@ describe('Tagliatelle', () => {
 
         test('Get existing tags', (done) => {
             const ts = new Tagliatelle();
-            mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(tagKey)}`, {
+            mock.get(new RegExp(`${ts.baseUrl}/v0/tags?(.*)&key=${encodeURIComponent(tagKey)}`), {
                 status: 200,
                 body: {
                     results: [res],
@@ -220,7 +220,7 @@ describe('Tagliatelle', () => {
 
         test('Get existing tags, no results', (done) => {
             const ts = new Tagliatelle();
-            mock.get(`${ts.baseUrl}/v0/tags?key=${encodeURIComponent(tagKey)}`, {
+            mock.get(new RegExp(`${ts.baseUrl}/v0/tags?(.*)&key=${encodeURIComponent(tagKey)}`), {
                 status: 200,
                 body: {
                     results: [],
@@ -246,7 +246,7 @@ describe('Tagliatelle', () => {
 
         test('Returns correct values', (done) => {
             const ts = new Tagliatelle();
-            mock.get(`${ts.baseUrl}/v0/tags/${encodeURIComponent(id)}`, {
+            mock.get(new RegExp(`${ts.baseUrl}/v0/tags/${encodeURIComponent(id)}(.*)`), {
                 status: 200,
                 body: res,
             });
@@ -260,7 +260,7 @@ describe('Tagliatelle', () => {
 
         test('Throws TagNotFound when tag doesn\'t exist', (done) => {
             const ts = new Tagliatelle();
-            mock.get(`${ts.baseUrl}/v0/tags/${encodeURIComponent(id)}`, {
+            mock.get(new RegExp(`${ts.baseUrl}/v0/tags/${encodeURIComponent(id)}(.*)`), {
                 status: 404,
                 body: {
                     data: {results: []},
@@ -329,7 +329,7 @@ describe('Tagliatelle', () => {
 
         test('Creates a tag when does not exist', (done) => {
             const ts = new Tagliatelle();
-            mock.get(`${ts.baseUrl}/v0/tags?key=urn%3Astereotype%3AtemplateName&resourceUri=https%3A%2F%2Fstereotype.trdlnk.cimpress.io%2Fv1%2Ftemplates%2Ftest`, {
+            mock.get(new RegExp(`${ts.baseUrl}/v0/tags?(.*)&key=urn%3Astereotype%3AtemplateName&resourceUri=https%3A%2F%2Fstereotype.trdlnk.cimpress.io%2Fv1%2Ftemplates%2Ftest`), {
                 status: 201,
                 body: {results: []},
             });
@@ -347,7 +347,7 @@ describe('Tagliatelle', () => {
 
         test('Updates a tag when it does exist', (done) => {
             const ts = new Tagliatelle();
-            mock.get(`${ts.baseUrl}/v0/tags?key=urn%3Astereotype%3AtemplateName&resourceUri=https%3A%2F%2Fstereotype.trdlnk.cimpress.io%2Fv1%2Ftemplates%2Ftest`, {
+            mock.get(new RegExp(`${ts.baseUrl}/v0/tags?(.*)&key=urn%3Astereotype%3AtemplateName&resourceUri=https%3A%2F%2Fstereotype.trdlnk.cimpress.io%2Fv1%2Ftemplates%2Ftest`), {
                 status: 201,
                 body: {results: [res]},
             });
@@ -418,7 +418,7 @@ describe('Tagliatelle', () => {
             };
 
             const ts = new Tagliatelle();
-            mock.get(`${ts.baseUrl}/v0/tags/xx`, {
+            mock.get(new RegExp(`${ts.baseUrl}/v0/tags/xx(.*)`), {
                 status: 204,
                 body: res,
             });
