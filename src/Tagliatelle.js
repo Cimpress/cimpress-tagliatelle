@@ -19,6 +19,7 @@ class Tagliatelle {
         this.retryAttempts = retryAttempts >= 0 ? retryAttempts : 3;
         this.retryDelayInMs = retryDelayInMs >= 0 ? retryDelayInMs : 1000;
         this.autoFetchPagedResults = options.autoFetchPagedResults || false;
+        this.skipCache = (typeof options.skipCache === 'boolean') ? options.skipCache : true;
 
         Object
             .keys(options)
@@ -85,14 +86,20 @@ class Tagliatelle {
             keys.push(searchParams.key);
         }
 
+        let skipCacheParams = {};
+        if (this.skipCache) {
+            skipCacheParams.skipCache = Math.random();
+        }
+
         const axiosInstance = this.__getAxiosInstance(accessToken);
         const response = await axiosInstance.get(`${this.baseUrl}/v0/tags`, {
-            params: {
+            params: Object.assign({}, skipCacheParams, {
                 namespace: searchParams.namespace ? searchParams.namespace : undefined,
                 key: keys.length > 0 ? keys : undefined,
                 resourceUri: uris.length > 0 ? uris : undefined,
+                skipCache: Math.random(),
                 offset: Number.isInteger(Number(searchParams.offset)) && Number(searchParams.offset)>0 ? searchParams.offset : undefined,
-            },
+            }),
             paramsSerializer: (params) => qs.stringify(params, {indices: false}),
         });
 

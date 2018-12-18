@@ -1,6 +1,6 @@
 {
   "name": "cimpress-tagliatelle",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A thin client for Cimpress Tagliatelle service",
   "main": "lib/index.js",
   "scripts": {
