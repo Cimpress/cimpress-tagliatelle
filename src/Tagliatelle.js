@@ -8,7 +8,8 @@ const DEFAULT_BASE_URL = 'https://tagliatelle.trdlnk.cimpress.io';
 
 class Tagliatelle {
     constructor(clientOptions) {
-        const understoodOptions = ['baseUrl', 'timeout', 'retryAttempts', 'retryDelayInMs', 'autoFetchPagedResults'];
+        const understoodOptions = ['baseUrl', 'timeout', 'retryAttempts', 'retryDelayInMs',
+            'autoFetchPagedResults', 'debugFunction', 'errorFunction', 'skipCache'];
         const options = clientOptions || {};
         const timeout = parseInt(options.timeout, 10);
         const retryAttempts = parseInt(options.retryAttempts, 10);
@@ -20,6 +21,8 @@ class Tagliatelle {
         this.retryDelayInMs = retryDelayInMs >= 0 ? retryDelayInMs : 1000;
         this.autoFetchPagedResults = options.autoFetchPagedResults || false;
         this.skipCache = (typeof options.skipCache === 'boolean') ? options.skipCache : true;
+        this.debugFunction = Object.keys(options).includes('debugFunction') ? options.debugFunction : console.info;
+        this.errorFunction = Object.keys(options).includes('errorFunction') ? options.errorFunction : console.error;
 
         Object
             .keys(options)
@@ -29,6 +32,18 @@ class Tagliatelle {
                     console.error(`[Tagliatelle] Option '${passedOption}' is not understood and will be ignored.`);
                 }
             });
+    }
+
+    __debug(...args) {
+        if (this.debugFunction) {
+            this.debugFunction('[TagliatelleClient]', ...args);
+        }
+    }
+
+    __error(...args) {
+        if (this.errorFunction) {
+            this.errorFunction('[TagliatelleClient]', ...args);
+        }
     }
 
     __getAxiosInstance(accessToken) {
@@ -91,14 +106,18 @@ class Tagliatelle {
             skipCacheParams.skipCache = Math.random();
         }
 
+        const params = Object.assign({}, skipCacheParams, {
+            namespace: searchParams.namespace ? searchParams.namespace : undefined,
+            key: keys.length > 0 ? keys : undefined,
+            resourceUri: uris.length > 0 ? uris : undefined,
+            offset: Number.isInteger(Number(searchParams.offset)) && Number(searchParams.offset)>0 ? searchParams.offset : undefined,
+        });
+
         const axiosInstance = this.__getAxiosInstance(accessToken);
+
+        this.__debug(`Calling GET ${this.baseUrl}/v0/tags ...`, params);
         const response = await axiosInstance.get(`${this.baseUrl}/v0/tags`, {
-            params: Object.assign({}, skipCacheParams, {
-                namespace: searchParams.namespace ? searchParams.namespace : undefined,
-                key: keys.length > 0 ? keys : undefined,
-                resourceUri: uris.length > 0 ? uris : undefined,
-                offset: Number.isInteger(Number(searchParams.offset)) && Number(searchParams.offset)>0 ? searchParams.offset : undefined,
-            }),
+            params: params,
             paramsSerializer: (params) => qs.stringify(params, {indices: false}),
         });
 
@@ -121,6 +140,10 @@ class Tagliatelle {
                     throw new TagNotFound();
                 }
                 return results[0];
+            })
+            .catch((e) => {
+                this.__error(e);
+                throw e;
             });
     }
 
@@ -131,9 +154,11 @@ class Tagliatelle {
     async getTagById(accessToken, id) {
         const axiosInstance = this.__getAxiosInstance(accessToken);
         try {
+            this.__debug(`Calling ${this.baseUrl}/v0/tags/${encodeURIComponent(id)} ...`);
             const response = await axiosInstance.get(`${this.baseUrl}/v0/tags/${encodeURIComponent(id)}`);
             return response.data;
         } catch (err) {
+            this.__error(err);
             if (err.response && err.response.status === 404) {
                 throw new TagNotFound();
             }
@@ -145,6 +170,7 @@ class Tagliatelle {
         return this.__getTagsPartial(accessToken, {resourceUri, key: tagKey})
             .then((res) => {
                 const results = res.results;
+                this.__debug('createOrUpdateTag for ', resourceUri, tagKey, 'found:', results);
                 if (results.length === 0) {
                     return this.createTag(accessToken, resourceUri, tagKey, tagValue);
                 }
@@ -152,33 +178,57 @@ class Tagliatelle {
                     return this.updateTag(accessToken, results[0].id, resourceUri, tagKey, tagValue);
                 }
                 throw new ConflictError('Multiple tags matching.');
+            })
+            .catch((e) => {
+                this.__error(e);
+                throw e;
             });
     }
 
     async createTag(accessToken, resourceUri, tagKey, tagValue) {
         const axiosInstance = this.__getAxiosInstance(accessToken);
-        const response = await axiosInstance.post(`${this.baseUrl}/v0/tags`, {
+        const params = {
             key: tagKey,
             value: tagValue,
             resourceUri: resourceUri,
-        });
-        return response.data;
+        };
+        try {
+            this.__debug(`Calling POST ${this.baseUrl}/v0/tags`, params);
+            const response = await axiosInstance.post(`${this.baseUrl}/v0/tags`, params);
+            return response.data;
+        } catch (e) {
+            this.__error(e);
+            throw e;
+        }
     }
 
     async updateTag(accessToken, id, resourceUri, tagKey, tagValue) {
         const axiosInstance = this.__getAxiosInstance(accessToken);
-        const response = await axiosInstance.put(`${this.baseUrl}/v0/tags/${encodeURIComponent(id)}`, {
+        const params = {
             key: tagKey,
             value: tagValue,
             resourceUri: resourceUri,
-        });
-        return response.data;
+        };
+        try {
+            this.__debug(`Calling PUT ${this.baseUrl}/v0/tags/${encodeURIComponent(id)}`, params);
+            const response = await axiosInstance.put(`${this.baseUrl}/v0/tags/${encodeURIComponent(id)}`, params);
+            return response.data;
+        } catch (e) {
+            this.__error(e);
+            throw e;
+        }
     }
 
     async deleteTag(accessToken, id) {
         const axiosInstance = this.__getAxiosInstance(accessToken);
-        const response = await axiosInstance.delete(`${this.baseUrl}/v0/tags/${encodeURIComponent(id)}`);
-        return response.data;
+        try {
+            this.__debug(`Calling DELETE ${this.baseUrl}/v0/tags/${encodeURIComponent(id)}`);
+            const response = await axiosInstance.delete(`${this.baseUrl}/v0/tags/${encodeURIComponent(id)}`);
+            return response.data;
+        } catch (e) {
+            this.__error(e);
+            throw e;
+        }
     }
 }
 
