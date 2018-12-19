@@ -158,7 +158,7 @@ class Tagliatelle {
             const response = await axiosInstance.get(`${this.baseUrl}/v0/tags/${encodeURIComponent(id)}`);
             return response.data;
         } catch (err) {
-            this.__debug(err);
+            this.__error(err);
             if (err.response && err.response.status === 404) {
                 throw new TagNotFound();
             }
