@@ -61,6 +61,7 @@ class Tagliatelle {
                 retryDelay: (retryCount) => {
                     return this.retryDelayInMs;
                 },
+                shouldResetTimeout: true,
             });
         }
 
