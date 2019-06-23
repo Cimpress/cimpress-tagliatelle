@@ -1,6 +1,6 @@
 {
   "name": "cimpress-tagliatelle",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A thin client for Cimpress Tagliatelle service",
   "main": "lib/index.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "tagliatelle"
   ],
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "axios-retry": "^3.1.1",
     "qs": "^6.5.2",
     "babel-runtime": "^6.26.0"
