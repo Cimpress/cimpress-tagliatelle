@@ -47,7 +47,7 @@ class Tagliatelle {
     }
 
     __getAxiosInstance(accessToken) {
-        let instance = axios.create({
+        const instance = axios.create({
             baseURL: this.baseUrl,
             timeout: this.timeout,
             headers: {
@@ -69,17 +69,17 @@ class Tagliatelle {
     }
 
     async getTags(accessToken, searchParams) {
-        let results = await this.__getTagsPartial(accessToken, searchParams);
+        const results = await this.__getTagsPartial(accessToken, searchParams);
         if (!this.autoFetchPagedResults || results.total === results.count + (results.offset||0)) {
             return results;
         }
 
-        let total = results.total;
-        let fullResults = results;
+        const total = results.total;
+        const fullResults = results;
         let retrievedCount = results.count;
         while (retrievedCount < total) {
             searchParams.offset = retrievedCount;
-            let partial = await this.__getTagsPartial(accessToken, searchParams);
+            const partial = await this.__getTagsPartial(accessToken, searchParams);
             retrievedCount += partial.count;
             fullResults.count = retrievedCount;
             fullResults.results = fullResults.results.concat(partial.results);
@@ -102,7 +102,7 @@ class Tagliatelle {
             keys.push(searchParams.key);
         }
 
-        let skipCacheParams = {};
+        const skipCacheParams = {};
         if (this.skipCache) {
             skipCacheParams.skipCache = Math.random();
         }

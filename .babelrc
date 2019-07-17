@@ -1,7 +1,10 @@
 {
-	"presets": [ "env" ],
+	"presets": [
+		["@babel/preset-env", {
+			"useBuiltIns": false,
+		}],
+	],
 	"plugins": [
-	  "transform-runtime",
-	  "transform-async-to-generator"
+		"@babel/plugin-transform-runtime"
 	]
 }
