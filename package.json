@@ -1,10 +1,10 @@
 {
   "name": "cimpress-tagliatelle",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "A thin client for Cimpress Tagliatelle service",
   "main": "lib/index.js",
   "scripts": {
-    "test": "eslint --ext .js src; jest --coverage; ./node_modules/.bin/jest-coverage-ratchet",
+    "test": "eslint --ext .js src; jest --coverage",
     "build": "node ./node_modules/@babel/cli/bin/babel.js src -d lib --copy-files"
   },
   "author": "TrdelnikSquad@cimpress.com",
@@ -36,7 +36,6 @@
     "eslint": "^6.0.1",
     "eslint-config-google": "^0.13.0",
     "jest": "^24.8.0",
-    "jest-coverage-ratchet": "^0.2.3",
     "xhr-mock": "^2.4.1"
   },
   "jest": {
