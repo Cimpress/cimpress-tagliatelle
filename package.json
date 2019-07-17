@@ -1,11 +1,11 @@
 {
   "name": "cimpress-tagliatelle",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A thin client for Cimpress Tagliatelle service",
   "main": "lib/index.js",
   "scripts": {
     "test": "eslint --ext .js src; jest --coverage; ./node_modules/.bin/jest-coverage-ratchet",
-    "build": "node ./node_modules/babel-cli/bin/babel.js src -d lib --copy-files"
+    "build": "node ./node_modules/@babel/cli/bin/babel.js src -d lib --copy-files"
   },
   "author": "TrdelnikSquad@cimpress.com",
   "license": "MIT",
@@ -22,28 +22,28 @@
     "tagliatelle"
   ],
   "dependencies": {
+    "@babel/runtime": "^7.5.4",
     "axios": "^0.18.1",
     "axios-retry": "^3.1.1",
-    "qs": "^6.5.2",
-    "babel-runtime": "^6.26.0"
+    "qs": "^6.5.2"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-eslint": "^10.0.1",
-    "babel-jest": "^23.6.0",
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.7.0",
-    "eslint": "^5.4.0",
-    "eslint-config-google": "^0.9.1",
-    "jest": "^23.6.0",
+    "@babel/cli": "^7.5.0",
+    "@babel/core": "^7.5.4",
+    "@babel/plugin-transform-runtime": "^7.5.0",
+    "@babel/preset-env": "^7.5.4",
+    "babel-eslint": "^10.0.2",
+    "eslint": "^6.0.1",
+    "eslint-config-google": "^0.13.0",
+    "jest": "^24.8.0",
     "jest-coverage-ratchet": "^0.2.3",
-    "regenerator-runtime": "^0.12.1",
     "xhr-mock": "^2.4.1"
   },
   "jest": {
+    "coverageDirectory": "./coverage",
     "coverageReporters": [
-      "text"
+      "text-summary",
+      "json-summary"
     ],
     "collectCoverageFrom": [
       "src/**/*.js"
